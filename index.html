@@ -1,0 +1,292 @@
+<style>
+*{box-sizing:border-box;margin:0;padding:0;user-select:none;}
+body{font-family:sans-serif;}
+#app{width:100%;max-width:400px;margin:0 auto;background:#0a0a0f;border-radius:16px;overflow:hidden;color:#fff;}
+#scr-title{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:500px;cursor:pointer;padding:40px;}
+.nb{border:2px solid #b388ff;border-radius:20px;padding:48px 36px;width:100%;text-align:center;}
+.lm{font-size:12px;color:#b388ff;letter-spacing:5px;margin-bottom:10px;}
+.lt{font-size:36px;font-weight:500;color:#fff;line-height:1.2;margin-bottom:6px;}
+.ls{font-size:11px;color:#444;letter-spacing:3px;margin-bottom:60px;}
+.tt{font-size:14px;color:#fff;letter-spacing:4px;animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
+#scr-edit{display:none;flex-direction:column;}
+.eh{display:flex;align-items:center;padding:12px 16px;gap:10px;background:#0a0a0f;}
+.bb{color:#b388ff;font-size:22px;cursor:pointer;background:none;border:none;}
+.et{font-size:11px;color:#666;letter-spacing:3px;flex:1;text-align:center;}
+.thbtn{font-size:10px;color:#b388ff;border:1px solid #b388ff;border-radius:20px;padding:3px 10px;cursor:pointer;background:none;}
+#tc{position:relative;background:#0a0a0f;padding:12px 20px;}
+#tw{position:relative;width:100%;max-width:280px;margin:0 auto;}
+#ts{width:100%;height:auto;display:block;}
+#dl{position:absolute;top:0;left:0;width:100%;height:100%;}
+.si{position:absolute;cursor:grab;touch-action:none;display:flex;align-items:center;justify-content:center;transform-origin:center center;}
+.si.sel{outline:2px solid #b388ff;outline-offset:4px;border-radius:5px;}
+.db{position:absolute;top:-11px;right:-11px;width:22px;height:22px;border-radius:50%;background:#b388ff;color:#fff;font-size:12px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;}
+.bot{background:#0d0d18;border-top:1px solid #1a1a2e;padding:10px 14px;}
+.toprow{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.tabrow{display:flex;border-bottom:1px solid #1a1a2e;margin-bottom:10px;}
+.tab{flex:1;text-align:center;padding:8px 2px;cursor:pointer;font-size:11px;color:#444;letter-spacing:1px;border-bottom:2px solid transparent;}
+.tab.on{color:#b388ff;border-bottom-color:#b388ff;}
+.clr{font-size:11px;color:#555;border:none;background:none;cursor:pointer;}
+.sg{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-bottom:6px;}
+.sc{aspect-ratio:1;background:#131320;border-radius:10px;border:1px solid #1e1e30;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:26px;position:relative;}
+.sc:active{outline:2px solid #b388ff;}
+.sc.lim{border-color:#b388ff55;}
+.sc.lim::after{content:'LTD';position:absolute;bottom:2px;right:3px;font-size:7px;color:#b388ff;}
+.pg{display:flex;flex-direction:column;gap:5px;max-height:200px;overflow-y:auto;}
+.pcat{font-size:9px;color:#444;letter-spacing:2px;margin:5px 0 2px;}
+.pb{background:#131320;border:1px solid #1e1e30;border-radius:8px;color:#bbb;padding:9px 11px;font-size:12px;cursor:pointer;text-align:left;line-height:1.5;font-family:sans-serif;width:100%;}
+.pb:active{border-color:#b388ff;color:#fff;}
+.or{display:flex;gap:5px;align-items:center;flex-wrap:wrap;}
+.cd{width:20px;height:20px;border-radius:50%;cursor:pointer;border:2px solid #333;flex-shrink:0;}
+.cd.on{border-color:#fff;transform:scale(1.2);}
+.tp{display:flex;flex-direction:column;gap:6px;}
+.ti{background:#131320;border:1px solid #1e1e30;border-radius:8px;color:#fff;padding:7px 11px;font-size:13px;width:100%;}
+.pr{font-size:15px;font-weight:500;text-align:center;min-height:20px;}
+.fb{font-size:10px;color:#555;border:1px solid #1e1e30;border-radius:5px;padding:4px 8px;cursor:pointer;background:#131320;}
+.fb.on{border-color:#b388ff;color:#b388ff;background:#1a0a2e;}
+.ab{background:#b388ff;color:#fff;border:none;border-radius:7px;padding:6px 12px;font-size:11px;cursor:pointer;margin-left:auto;}
+.divl{height:1px;background:#1a1a2e;margin:4px 0;}
+.npr{font-size:26px;font-weight:500;font-family:monospace;min-width:54px;text-align:center;}
+.np{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:5px;}
+.nk{background:#131320;border:1px solid #1e1e30;border-radius:7px;color:#fff;padding:8px;font-size:15px;cursor:pointer;text-align:center;}
+.nk:active{background:#1a0a2e;}
+.drow{display:flex;gap:5px;}
+.di{flex:1;background:#131320;border:1px solid #1e1e30;border-radius:7px;color:#fff;padding:7px 10px;font-size:12px;}
+.dab{background:#b388ff;color:#fff;border:none;border-radius:7px;padding:7px 12px;font-size:11px;cursor:pointer;}
+.ok{width:100%;background:#b388ff;color:#fff;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:500;cursor:pointer;letter-spacing:3px;margin-top:10px;}
+#scr-confirm{display:none;flex-direction:column;align-items:center;padding:24px;background:#0a0a0f;min-height:500px;justify-content:center;}
+.ctitle{font-size:18px;color:#fff;margin-bottom:18px;letter-spacing:4px;}
+#cc{position:relative;width:100%;max-width:260px;}
+#ct{width:100%;height:auto;display:block;}
+#cs{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;}
+.done{width:100%;max-width:260px;background:#b388ff;color:#fff;border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:500;cursor:pointer;margin-top:18px;letter-spacing:3px;}
+.bk{font-size:12px;color:#555;background:none;border:none;cursor:pointer;margin-top:10px;}
+#sleep-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0a0f;z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:20px;cursor:pointer;}
+.sl-txt{font-size:13px;color:#b388ff;letter-spacing:4px;animation:blink 2s infinite;}
+</style>
+
+<div id="sleep-overlay" onclick="wakeUp()">
+  <div style="font-size:40px;">🌙</div>
+  <div class="sl-txt">TAP TO WAKE</div>
+</div>
+
+<div id="app">
+  <div id="scr-title" onclick="showEdit()">
+    <div class="nb">
+      <div class="lm">ZUTOMAYO × YR JAPAN</div>
+      <div class="lt">カスタム<br>スタジオ</div>
+      <div class="ls">T-SHIRT DESIGNER</div>
+      <div class="tt">TAP TO GET STARTED</div>
+    </div>
+  </div>
+
+  <div id="scr-edit">
+    <div class="eh">
+      <button class="bb" onclick="showTitle()">&#8249;</button>
+      <div class="et">DESIGN YOUR TEE</div>
+      <button class="thbtn" onclick="toggleTheme()">DARK/LIGHT</button>
+    </div>
+    <div id="tc">
+      <div id="tw">
+        <svg id="ts" viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg">
+          <path id="tee" d="M80,10 L50,30 L10,50 L30,90 L60,75 L60,260 L240,260 L240,75 L270,90 L290,50 L250,30 L220,10 Q180,30 150,30 Q120,30 80,10 Z" fill="#ffffff" stroke="#ddd" stroke-width="1"/>
+        </svg>
+        <div id="dl"></div>
+      </div>
+    </div>
+    <div class="bot">
+      <div class="toprow">
+        <div class="tabrow" style="flex:1;margin-right:8px;margin-bottom:0;border:none;">
+          <div class="tab on" onclick="sw('stamp')" id="tab-stamp">STAMP</div>
+          <div class="tab" onclick="sw('phrase')" id="tab-phrase">PHRASE</div>
+          <div class="tab" onclick="sw('text')" id="tab-text">TEXT/DATE</div>
+        </div>
+        <button class="clr" onclick="clearAll()">All Clear</button>
+      </div>
+      <div style="border-bottom:1px solid #1a1a2e;margin:6px 0 10px;"></div>
+
+      <div id="panel-stamp">
+        <div style="font-size:9px;color:#444;letter-spacing:1px;margin-bottom:7px;">STAMPS　紫枠=会場限定</div>
+        <div class="sg">
+          <div class="sc" onclick="addS('🕐')">🕐</div>
+          <div class="sc" onclick="addS('🦋')">🦋</div>
+          <div class="sc" onclick="addS('🌙')">🌙</div>
+          <div class="sc" onclick="addS('⭐')">⭐</div>
+          <div class="sc" onclick="addS('🌸')">🌸</div>
+          <div class="sc lim" onclick="addS('🎵')">🎵</div>
+          <div class="sc lim" onclick="addS('✨')">✨</div>
+          <div class="sc lim" onclick="addS('🌊')">🌊</div>
+          <div class="sc lim" onclick="addS('🖤')">🖤</div>
+          <div class="sc lim" onclick="addS('🎸')">🎸</div>
+        </div>
+      </div>
+
+      <div id="panel-phrase" style="display:none;">
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+          <span style="font-size:9px;color:#444;">色:</span>
+          <button id="pc-blk" onclick="setPc('black')" style="flex:1;padding:7px;border-radius:8px;border:2px solid #b388ff;background:#111;color:#fff;font-size:12px;cursor:pointer;">● 黒</button>
+          <button id="pc-wht" onclick="setPc('white')" style="flex:1;padding:7px;border-radius:8px;border:1px solid #333;background:#fff;color:#111;font-size:12px;cursor:pointer;">● 白</button>
+          <span style="font-size:9px;color:#555;">← 選んでタップ</span>
+        </div>
+        <div class="pg">
+          <div class="pcat">— 歌詞フレーズ —</div>
+          <button class="pb" onclick="addP(this)">勝手に花を咲かせていたんだ</button>
+          <button class="pb" onclick="addP(this)">秒針を噛み切れたら</button>
+          <button class="pb" onclick="addP(this)">眠れないなら一緒に朝を待とう</button>
+          <button class="pb" onclick="addP(this)">ずっと真夜中でいいのに</button>
+          <button class="pb" onclick="addP(this)">全部夢だったとしても</button>
+          <button class="pb" onclick="addP(this)">あなたとなら眠れそう</button>
+          <button class="pb" onclick="addP(this)">消えない傷跡が好きだった</button>
+          <button class="pb" onclick="addP(this)">誰かの心臓で泣かないで</button>
+          <div class="pcat">— ACAねの言葉 —</div>
+          <button class="pb" onclick="addP(this)">夜を愛してる人、集まれ</button>
+          <button class="pb" onclick="addP(this)">音楽は逃げ場になれる</button>
+          <button class="pb" onclick="addP(this)">好きなものを好きでいていい</button>
+          <button class="pb" onclick="addP(this)">真夜中に生きてる人たちへ</button>
+        </div>
+      </div>
+
+      <div id="panel-text" style="display:none;">
+        <div class="tp">
+          <div id="tpr" class="pr" style="color:#fff;font-family:sans-serif;"></div>
+          <input class="ti" type="text" id="ti" placeholder="テキストを入力" maxlength="16" oninput="updPr()"/>
+          <div class="or">
+            <button class="fb on" onclick="setF(this,'sans-serif')">ゴシック</button>
+            <button class="fb" onclick="setF(this,'serif')">明朝</button>
+            <button class="fb" onclick="setF(this,'cursive')">筆記体</button>
+            <button class="fb" onclick="setF(this,'monospace')">等幅</button>
+          </div>
+          <div class="or">
+            <span style="font-size:9px;color:#444;">色:</span>
+            <div class="cd on" style="background:#fff;" onclick="setC(this,'#ffffff')"></div>
+            <div class="cd" style="background:#b388ff;" onclick="setC(this,'#b388ff')"></div>
+            <div class="cd" style="background:#ff6b9d;" onclick="setC(this,'#ff6b9d')"></div>
+            <div class="cd" style="background:#5ce1e6;" onclick="setC(this,'#5ce1e6')"></div>
+            <div class="cd" style="background:#ffd700;" onclick="setC(this,'#ffd700')"></div>
+            <div class="cd" style="background:#111;border-color:#555;" onclick="setC(this,'#111111')"></div>
+            <button class="ab" onclick="addT()">追加</button>
+          </div>
+          <div class="divl"></div>
+          <div style="font-size:9px;color:#444;margin-bottom:8px;letter-spacing:1px;">DATE — スクロールで選択</div>
+          <div style="display:flex;gap:6px;margin-bottom:8px;">
+            <div style="flex:1;text-align:center;">
+              <div style="font-size:9px;color:#555;margin-bottom:4px;">年</div>
+              <select id="sel-year" style="width:100%;background:#131320;border:1px solid #1e1e30;border-radius:7px;color:#fff;padding:7px 4px;font-size:13px;text-align:center;"></select>
+            </div>
+            <div style="flex:1;text-align:center;">
+              <div style="font-size:9px;color:#555;margin-bottom:4px;">月</div>
+              <select id="sel-month" style="width:100%;background:#131320;border:1px solid #1e1e30;border-radius:7px;color:#fff;padding:7px 4px;font-size:13px;text-align:center;"></select>
+            </div>
+            <div style="flex:1;text-align:center;">
+              <div style="font-size:9px;color:#555;margin-bottom:4px;">日</div>
+              <select id="sel-day" style="width:100%;background:#131320;border:1px solid #1e1e30;border-radius:7px;color:#fff;padding:7px 4px;font-size:13px;text-align:center;"></select>
+            </div>
+          </div>
+          <div style="margin-bottom:8px;">
+            <div style="font-size:9px;color:#555;margin-bottom:4px;">場所</div>
+            <select id="sel-place" style="width:100%;background:#131320;border:1px solid #1e1e30;border-radius:7px;color:#fff;padding:7px 10px;font-size:13px;"></select>
+          </div>
+          <div id="date-preview" style="font-size:13px;font-family:monospace;color:#b388ff;text-align:center;margin-bottom:6px;min-height:18px;"></div>
+          <button class="ab" style="width:100%;" onclick="addD()">日付を追加</button>
+        </div>
+      </div>
+
+      <button class="ok" onclick="showConfirm()">OK — 確認する</button>
+    </div>
+  </div>
+
+  <div id="scr-confirm">
+    <div class="ctitle">Are you Ready?</div>
+    <div id="cc">
+      <svg id="ct" viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg">
+        <path id="ctee" d="M80,10 L50,30 L10,50 L30,90 L60,75 L60,260 L240,260 L240,75 L270,90 L290,50 L250,30 L220,10 Q180,30 150,30 Q120,30 80,10 Z" fill="#ffffff" stroke="#ddd" stroke-width="1"/>
+      </svg>
+      <div id="cs"></div>
+    </div>
+    <button class="done">DONE — プリントへ</button>
+    <button class="bk" onclick="showEdit()">&#8249; 戻って編集する</button>
+  </div>
+</div>
+
+<script>
+var isDark=true,ns='',sel=null,cf='sans-serif',cc='#ffffff',cnc='#ffffff',pc='#111111';
+var stimer=null;
+function g(i){return document.getElementById(i);}
+function resetSleep(){clearTimeout(stimer);stimer=setTimeout(function(){g('sleep-overlay').style.display='flex';},60000);}
+function wakeUp(){g('sleep-overlay').style.display='none';resetSleep();}
+document.getElementById('app').addEventListener('pointerdown',function(){resetSleep();});
+resetSleep();
+function showTitle(){g('scr-title').style.display='flex';g('scr-edit').style.display='none';g('scr-confirm').style.display='none';}
+function showEdit(){g('scr-title').style.display='none';g('scr-edit').style.display='flex';g('scr-confirm').style.display='none';}
+function showConfirm(){
+  g('scr-title').style.display='none';g('scr-edit').style.display='none';g('scr-confirm').style.display='flex';
+  var src=g('tw'),dst=g('cs');dst.innerHTML='';
+  var sr=src.getBoundingClientRect(),dw=g('cc').offsetWidth||260;
+  g('cc').style.height=(sr.height*(dw/sr.width))+'px';
+  dst.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;';
+  g('ctee').setAttribute('fill',g('tee').getAttribute('fill'));
+  g('ctee').setAttribute('stroke',g('tee').getAttribute('stroke'));
+  g('dl').querySelectorAll('.si').forEach(function(el){
+    var c=el.cloneNode(true);c.querySelectorAll('.db').forEach(function(b){b.remove();});
+    c.classList.remove('sel');c.style.pointerEvents='none';dst.appendChild(c);
+  });
+}
+function toggleTheme(){isDark=!isDark;g('tee').setAttribute('fill',isDark?'#ffffff':'#1a0a2e');g('tee').setAttribute('stroke',isDark?'#ddd':'#b388ff');g('app').style.background=isDark?'#0a0a0f':'#f0ebff';}
+function sw(t){['stamp','phrase','text'].forEach(function(n){g('panel-'+n).style.display=n===t?'block':'none';g('tab-'+n).classList.toggle('on',n===t);});}
+function clearAll(){g('dl').innerHTML='';sel=null;ns='';g('npr').textContent='—';}
+function updPr(){var p=g('tpr');p.textContent=g('ti').value;p.style.color=cc;p.style.fontFamily=cf;}
+function setF(b,f){cf=f;b.closest('.or').querySelectorAll('.fb').forEach(function(x){x.classList.remove('on');});b.classList.add('on');g('tpr').style.fontFamily=f;}
+function setC(d,c){cc=c;d.closest('.or').querySelectorAll('.cd').forEach(function(x){x.classList.remove('on');});d.classList.add('on');g('tpr').style.color=c;}
+function setNC(d,c){cnc=c;d.closest('.or').querySelectorAll('.cd').forEach(function(x){x.classList.remove('on');});d.classList.add('on');g('npr').style.color=c;}
+function setPc(c){
+  pc=c==='black'?'#111111':'#ffffff';
+  g('pc-blk').style.border=c==='black'?'2px solid #b388ff':'1px solid #333';
+  g('pc-wht').style.border=c==='white'?'2px solid #b388ff':'1px solid #333';
+}
+function addS(e){var el=mk('position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(1) rotate(0deg);font-size:48px;width:66px;height:66px;display:flex;align-items:center;justify-content:center;touch-action:none;cursor:grab;');var s=document.createElement('span');s.textContent=e;s.style.pointerEvents='none';el.appendChild(s);el.appendChild(mkd(el));g('dl').appendChild(el);drag(el);selEl(el);}
+function addP(b){
+  var el=mk('position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(1) rotate(0deg);color:'+pc+';font-size:13px;font-weight:500;white-space:nowrap;touch-action:none;cursor:grab;display:flex;align-items:center;padding:2px 4px;');
+  var s=document.createElement('span');s.textContent=b.textContent;s.style.pointerEvents='none';
+  el.appendChild(s);el.appendChild(mkd(el));g('dl').appendChild(el);drag(el);selEl(el);
+}
+function addT(){var v=g('ti').value.trim();if(!v)return;var el=mk('position:absolute;left:50%;top:45%;transform:translate(-50%,-50%) scale(1) rotate(0deg);color:'+cc+';font-size:20px;font-weight:500;font-family:'+cf+';white-space:nowrap;touch-action:none;cursor:grab;display:flex;align-items:center;padding:2px 4px;');var s=document.createElement('span');s.textContent=v;s.style.pointerEvents='none';el.appendChild(s);el.appendChild(mkd(el));g('dl').appendChild(el);drag(el);selEl(el);g('ti').value='';g('tpr').textContent='';}
+function addN(){if(!ns)return;var el=mk('position:absolute;left:50%;top:45%;transform:translate(-50%,-50%) scale(1) rotate(0deg);color:'+cnc+';font-size:36px;font-weight:500;font-family:monospace;white-space:nowrap;touch-action:none;cursor:grab;display:flex;align-items:center;padding:2px 4px;');var s=document.createElement('span');s.textContent=ns;s.style.pointerEvents='none';el.appendChild(s);el.appendChild(mkd(el));g('dl').appendChild(el);drag(el);selEl(el);ns='';g('npr').textContent='—';}
+function addD(){
+  var y=g('sel-year').value,m=g('sel-month').value,d=g('sel-day').value,p=g('sel-place').value;
+  var v=y+'.'+m+'.'+d+'  '+p;var el=mk('position:absolute;left:50%;top:55%;transform:translate(-50%,-50%) scale(1) rotate(0deg);color:'+cc+';font-size:14px;font-weight:500;font-family:monospace;white-space:nowrap;touch-action:none;cursor:grab;display:flex;align-items:center;padding:2px 4px;');var s=document.createElement('span');s.textContent=v;s.style.pointerEvents='none';el.appendChild(s);el.appendChild(mkd(el));g('dl').appendChild(el);drag(el);selEl(el);g('di').value='';}
+function ni(v){ns=(ns+v).slice(0,2);var p=g('npr');p.textContent=ns||'—';p.style.color=cnc;}
+function nc(){ns='';g('npr').textContent='—';}
+function nd(){ns=ns.slice(0,-1);g('npr').textContent=ns||'—';}
+
+var places=['TOKYO','OSAKA','NAGOYA','SAPPORO','FUKUOKA','SENDAI','YOKOHAMA','KYOTO','HIROSHIMA','NAHA'];
+function buildSelects(){
+  var yr=g('sel-year'),mo=g('sel-month'),dy=g('sel-day'),pl=g('sel-place');
+  var now=new Date();
+  for(var y=now.getFullYear();y<=now.getFullYear()+2;y++){var o=document.createElement('option');o.value=y;o.textContent=y+'年';yr.appendChild(o);}
+  for(var m=1;m<=12;m++){var o=document.createElement('option');o.value=m;o.textContent=m+'月';mo.appendChild(o);}
+  mo.value=now.getMonth()+1;
+  for(var d=1;d<=31;d++){var o=document.createElement('option');o.value=d;o.textContent=d+'日';dy.appendChild(o);}
+  dy.value=now.getDate();
+  places.forEach(function(p){var o=document.createElement('option');o.value=p;o.textContent=p;pl.appendChild(o);});
+  [yr,mo,dy,pl].forEach(function(s){s.addEventListener('change',updateDatePreview);});
+  updateDatePreview();
+}
+function updateDatePreview(){
+  var y=g('sel-year').value,m=g('sel-month').value,d=g('sel-day').value,p=g('sel-place').value;
+  g('date-preview').textContent=y+'.'+m+'.'+d+'  '+p;
+}
+buildSelects();function mk(css){var el=document.createElement('div');el.className='si';el.dataset.scale='1';el.dataset.rot='0';el.style.cssText=css;return el;}
+function mkd(el){var db=document.createElement('button');db.className='db';db.textContent='x';db.onclick=function(e){e.stopPropagation();el.remove();if(sel===el)sel=null;};return db;}
+function selEl(el){if(sel&&sel!==el)sel.classList.remove('sel');sel=el;if(el)el.classList.add('sel');}
+function drag(el){
+  var sx,sy,ex,ey,ac=false;
+  el.addEventListener('pointerdown',function(e){if(e.target.classList.contains('db'))return;selEl(el);e.preventDefault();ac=true;sx=e.clientX;sy=e.clientY;ex=parseFloat(el.style.left)||50;ey=parseFloat(el.style.top)||50;el.setPointerCapture(e.pointerId);});
+  el.addEventListener('pointermove',function(e){if(!ac)return;var ca=g('tw').getBoundingClientRect();el.style.left=(ex+(e.clientX-sx)/ca.width*100)+'%';el.style.top=(ey+(e.clientY-sy)/ca.height*100)+'%';});
+  el.addEventListener('pointerup',function(){ac=false;});
+}
+g('dl').addEventListener('pointerdown',function(e){if(!e.target.closest('.si'))selEl(null);});
+var pi=false,pd=0,ps=1,pr=0,pt0x,pt0y,pt1x,pt1y;
+g('tw').addEventListener('touchstart',function(e){if(e.touches.length===2&&sel){pi=true;pt0x=e.touches[0].clientX;pt0y=e.touches[0].clientY;pt1x=e.touches[1].clientX;pt1y=e.touches[1].clientY;pd=Math.hypot(pt1x-pt0x,pt1y-pt0y);ps=parseFloat(sel.dataset.scale)||1;pr=parseFloat(sel.dataset.rot)||0;}},{passive:true});
+g('tw').addEventListener('touchmove',function(e){if(pi&&sel&&e.touches.length===2){e.preventDefault();var c0x=e.touches[0].clientX,c0y=e.touches[0].clientY,c1x=e.touches[1].clientX,c1y=e.touches[1].clientY;var cd=Math.hypot(c1x-c0x,c1y-c0y);var s=Math.max(0.3,Math.min(4,ps*(cd/pd)));var sa=Math.atan2(pt1y-pt0y,pt1x-pt0x);var ca2=Math.atan2(c1y-c0y,c1x-c0x);var rot=pr+(ca2-sa)*(180/Math.PI);sel.dataset.scale=s;sel.dataset.rot=rot;sel.style.transform='translate(-50%,-50%) scale('+s+') rotate('+rot+'deg)';}},{passive:false});
+g('tw').addEventListener('touchend',function(){pi=false;},{passive:true});
+</script>
