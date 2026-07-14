@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ZUTOMAYO LABO — 3D PREVIEW</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+
+:root{
+  --purple:#b388ff;
+  --purple-dim:#7a5cc4;
+  --bg:#08080f;
+  --bg2:#0d0d1a;
+  --border:#232340;
+  --text:#fff;
+  --dim:#6b6b85;
+}
+
+html,body{height:100%;background:var(--bg);font-family:'Noto Sans JP',sans-serif;color:var(--text);overflow:hidden;}
+
+#app{
+  position:fixed;inset:0;
+  display:flex;flex-direction:column;
+  background:
+    radial-gradient(120% 80% at 50% 32%, rgba(179,136,255,0.14) 0%, rgba(179,136,255,0) 55%),
+    linear-gradient(180deg, #0b0b16 0%, #08080f 60%, #06060c 100%);
+}
+
+/* ── header ── */
+header{
+  padding:26px 24px 10px;
+  text-align:center;
+  z-index:3;
+}
+.eyebrow{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:7px;color:var(--purple);}
+.title{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:4px;margin-top:2px;}
+
+/* ── 3d stage ── */
+#stage{flex:1;position:relative;min-height:0;}
+#gl{position:absolute;inset:0;display:block;touch-action:none;cursor:grab;}
+#gl.grabbing{cursor:grabbing;}
+
+/* rotate hint */
+#hint{
+  position:absolute;left:50%;bottom:18px;transform:translateX(-50%);
+  display:flex;align-items:center;gap:9px;
+  font-size:12px;letter-spacing:2px;color:var(--dim);
+  pointer-events:none;transition:opacity .5s;
+}
+#hint svg{width:26px;height:26px;stroke:var(--purple-dim);fill:none;stroke-width:1.6;}
+#hint.hide{opacity:0;}
+
+/* ── controls dock ── */
+.dock{
+  z-index:3;
+  padding:16px 22px calc(20px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg, rgba(8,8,15,0) 0%, rgba(8,8,15,0.85) 32%, #08080f 100%);
+}
+
+.view-row{display:flex;gap:10px;justify-content:center;margin-bottom:16px;}
+.view-btn{
+  font-family:'Bebas Neue',sans-serif;letter-spacing:3px;font-size:16px;
+  padding:9px 26px;border-radius:999px;
+  background:transparent;border:1px solid var(--border);color:var(--dim);
+  cursor:pointer;transition:.2s;
+}
+.view-btn.on{background:var(--purple);border-color:var(--purple);color:#12061f;}
+
+.swatch-label{text-align:center;font-size:11px;letter-spacing:2px;color:var(--dim);margin-bottom:10px;}
+.swatches{display:flex;gap:14px;justify-content:center;}
+.sw{
+  width:42px;height:42px;border-radius:12px;cursor:pointer;
+  border:2px solid transparent;transition:.15s;position:relative;
+}
+.sw.on{border-color:var(--purple);transform:translateY(-3px);}
+.sw.on::after{
+  content:'';position:absolute;inset:-7px;border-radius:16px;
+  border:1px solid rgba(179,136,255,.35);
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="eyebrow">ZUTOMAYO × YR JAPAN</div>
+    <div class="title">3D PREVIEW</div>
+  </header>
+
+  <div id="stage">
+    <canvas id="gl"></canvas>
+    <div id="hint">
+      <svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 14-5"/><path d="M18 3v4h-4"/><path d="M20 12a8 8 0 0 1-14 5"/><path d="M6 21v-4h4"/></svg>
+      <span>ドラッグでまわす</span>
+    </div>
+  </div>
+
+  <div class="dock">
+    <div class="view-row">
+      <button class="view-btn on" data-view="front">FRONT</button>
+      <button class="view-btn" data-view="back">BACK</button>
+    </div>
+    <div class="swatch-label">ボディカラー</div>
+    <div class="swatches" id="swatches"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const canvas = document.getElementById('gl');
+  const stage  = document.getElementById('stage');
+
+  // ── renderer / scene / camera ──
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  const scene  = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 2000);
+  camera.position.set(0, 0, 150);
+  camera.lookAt(0, 0, 0);
+
+  // ── lights ──
+  scene.add(new THREE.AmbientLight(0x5b5b78, 0.75));
+  const key = new THREE.DirectionalLight(0xffffff, 1.15);
+  key.position.set(40, 60, 80);
+  scene.add(key);
+  const rim = new THREE.DirectionalLight(0xb388ff, 0.85); // violet rim
+  rim.position.set(-60, 10, -50);
+  scene.add(rim);
+  const fill = new THREE.DirectionalLight(0x6f7bd6, 0.35);
+  fill.position.set(-30, -20, 40);
+  scene.add(fill);
+
+  // ── build a T-shirt silhouette and extrude it ──
+  function tshirtShape(){
+    const s = new THREE.Shape();
+    // clockwise outline, origin ~ garment center
+    s.moveTo(8, 33);              // collar right
+    s.lineTo(17, 32);             // shoulder right
+    s.lineTo(35, 23);             // sleeve outer top
+    s.lineTo(35, 10);             // sleeve outer bottom
+    s.lineTo(21, 13);             // armpit right
+    s.lineTo(22, -40);            // body side right
+    s.quadraticCurveTo(22, -44, 18, -44); // hem corner R
+    s.lineTo(-18, -44);           // hem
+    s.quadraticCurveTo(-22, -44, -22, -40); // hem corner L
+    s.lineTo(-21, 13);            // body side left
+    s.lineTo(-35, 10);            // sleeve outer bottom left
+    s.lineTo(-35, 23);            // sleeve outer top left
+    s.lineTo(-17, 32);            // shoulder left
+    s.lineTo(-8, 33);             // collar left
+    s.quadraticCurveTo(0, 27, 8, 33); // neckline dip
+    return s;
+  }
+
+  const geo = new THREE.ExtrudeGeometry(tshirtShape(), {
+    depth: 9,
+    bevelEnabled: true,
+    bevelThickness: 3.5,
+    bevelSize: 3,
+    bevelSegments: 6,
+    curveSegments: 24
+  });
+  geo.center(); // center on all axes
+  geo.computeBoundingBox();
+  const gsize = new THREE.Vector3();
+  geo.boundingBox.getSize(gsize);
+  // dims that constrain framing (account for Y-rotation swapping x<->z)
+  const fitWidth  = Math.max(gsize.x, gsize.z);
+  const fitHeight = gsize.y;
+  const halfDepth = Math.max(gsize.x, gsize.z) / 2;
+
+  const mat = new THREE.MeshStandardMaterial({
+    color: 0xece7dd,
+    roughness: 0.92,
+    metalness: 0.0,
+    flatShading: false
+  });
+
+  const shirt = new THREE.Mesh(geo, mat);
+  const group = new THREE.Group();
+  group.add(shirt);
+  scene.add(group);
+
+  // ── rotation state (target + eased current, with inertia) ──
+  let curX = 0, curY = 0;      // current rotation
+  let tgtX = 0, tgtY = 0;      // target rotation
+  let velY = 0;                // inertia on Y
+  let dragging = false, lastX = 0, lastY = 0, moved = false;
+  let idle = 0;                // frames since last interaction
+  const hint = document.getElementById('hint');
+
+  function pointerDown(e){
+    dragging = true; moved = false; idle = 0; velY = 0;
+    canvas.classList.add('grabbing');
+    const p = point(e); lastX = p.x; lastY = p.y;
+  }
+  function pointerMove(e){
+    if(!dragging) return;
+    const p = point(e);
+    const dx = p.x - lastX, dy = p.y - lastY;
+    lastX = p.x; lastY = p.y;
+    tgtY += dx * 0.011;
+    tgtX += dy * 0.010;
+    tgtX = Math.max(-0.55, Math.min(0.55, tgtX)); // clamp tilt
+    velY = dx * 0.011;
+    if(Math.abs(dx)+Math.abs(dy) > 2 && !moved){ moved = true; hint.classList.add('hide'); }
+  }
+  function pointerUp(){ dragging = false; idle = 0; canvas.classList.remove('grabbing'); }
+  function point(e){
+    if(e.touches && e.touches[0]) return {x:e.touches[0].clientX, y:e.touches[0].clientY};
+    return {x:e.clientX, y:e.clientY};
+  }
+  canvas.addEventListener('mousedown', pointerDown);
+  window.addEventListener('mousemove', pointerMove);
+  window.addEventListener('mouseup', pointerUp);
+  canvas.addEventListener('touchstart', pointerDown, {passive:true});
+  canvas.addEventListener('touchmove', function(e){ pointerMove(e); }, {passive:true});
+  canvas.addEventListener('touchend', pointerUp, {passive:true});
+
+  // ── front / back buttons ──
+  document.querySelectorAll('.view-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('on'));
+      btn.classList.add('on');
+      // snap to nearest equivalent of 0 (front) or PI (back)
+      const target = btn.dataset.view === 'back' ? Math.PI : 0;
+      const twoPi = Math.PI*2;
+      let base = Math.round((tgtY - target) / twoPi) * twoPi;
+      tgtY = base + target;
+      tgtX = 0; velY = 0; idle = 0;
+    });
+  });
+
+  // ── body color swatches ──
+  const colors = [
+    {name:'off white', hex:0xece7dd},
+    {name:'black',     hex:0x1b1b24},
+    {name:'lavender',  hex:0xc3b0ec},
+    {name:'violet',    hex:0x7a5cc4},
+    {name:'teal',      hex:0x2f6f60},
+    {name:'gold',      hex:0xceac52}
+  ];
+  const swWrap = document.getElementById('swatches');
+  colors.forEach(function(c, i){
+    const el = document.createElement('div');
+    el.className = 'sw' + (i===0 ? ' on':'');
+    el.style.background = '#' + c.hex.toString(16).padStart(6,'0');
+    el.title = c.name;
+    el.addEventListener('click', function(){
+      document.querySelectorAll('.sw').forEach(s=>s.classList.remove('on'));
+      el.classList.add('on');
+      mat.color.setHex(c.hex);
+    });
+    swWrap.appendChild(el);
+  });
+
+  // ── resize ──
+  function resize(){
+    const w = stage.clientWidth, h = stage.clientHeight;
+    renderer.setSize(w, h, false);
+    const aspect = w / h;
+    camera.aspect = aspect;
+
+    const vFov = camera.fov * Math.PI / 180;
+    const PAD = 1.22; // breathing room around the tee
+    const distForHeight = (fitHeight * PAD / 2) / Math.tan(vFov / 2);
+    const distForWidth  = (fitWidth  * PAD / 2) / (Math.tan(vFov / 2) * aspect);
+    const dist = Math.max(distForHeight, distForWidth) + halfDepth;
+
+    camera.position.set(0, 0, dist);
+    camera.lookAt(0, 0, 0);
+    camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  // ── loop ──
+  function animate(){
+    requestAnimationFrame(animate);
+
+    // idle auto-spin after ~2.5s of no interaction
+    if(!dragging){
+      idle++;
+      if(idle > 150){ tgtY += 0.0035; }      // gentle turntable
+      else if(Math.abs(velY) > 0.0001){       // inertia glide
+        tgtY += velY; velY *= 0.94;
+      }
+    }
+
+    // ease current toward target
+    curY += (tgtY - curY) * 0.12;
+    curX += (tgtX - curX) * 0.12;
+    group.rotation.y = curY;
+    group.rotation.x = curX;
+
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+</script>
+</body>
+</html>
