@@ -1,292 +1,464 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ZUTOMAYO LABO — Tシャツ・カスタマイズ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600;700&family=Noto+Sans+JP:wght@400;500;700&family=Zen+Maru+Gothic:wght@500;700&family=Mochiy+Pop+One&family=Yuji+Syuku&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;user-select:none;}
-body{font-family:sans-serif;}
-#app{width:100%;max-width:400px;margin:0 auto;background:#0a0a0f;border-radius:16px;overflow:hidden;color:#fff;}
-#scr-title{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:500px;cursor:pointer;padding:40px;}
-.nb{border:2px solid #b388ff;border-radius:20px;padding:48px 36px;width:100%;text-align:center;}
-.lm{font-size:12px;color:#b388ff;letter-spacing:5px;margin-bottom:10px;}
-.lt{font-size:36px;font-weight:500;color:#fff;line-height:1.2;margin-bottom:6px;}
-.ls{font-size:11px;color:#444;letter-spacing:3px;margin-bottom:60px;}
-.tt{font-size:14px;color:#fff;letter-spacing:4px;animation:blink 1.5s infinite;}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
-#scr-edit{display:none;flex-direction:column;}
-.eh{display:flex;align-items:center;padding:12px 16px;gap:10px;background:#0a0a0f;}
-.bb{color:#b388ff;font-size:22px;cursor:pointer;background:none;border:none;}
-.et{font-size:11px;color:#666;letter-spacing:3px;flex:1;text-align:center;}
-.thbtn{font-size:10px;color:#b388ff;border:1px solid #b388ff;border-radius:20px;padding:3px 10px;cursor:pointer;background:none;}
-#tc{position:relative;background:#0a0a0f;padding:12px 20px;}
-#tw{position:relative;width:100%;max-width:280px;margin:0 auto;}
-#ts{width:100%;height:auto;display:block;}
-#dl{position:absolute;top:0;left:0;width:100%;height:100%;}
-.si{position:absolute;cursor:grab;touch-action:none;display:flex;align-items:center;justify-content:center;transform-origin:center center;}
-.si.sel{outline:2px solid #b388ff;outline-offset:4px;border-radius:5px;}
-.db{position:absolute;top:-11px;right:-11px;width:22px;height:22px;border-radius:50%;background:#b388ff;color:#fff;font-size:12px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;}
-.bot{background:#0d0d18;border-top:1px solid #1a1a2e;padding:10px 14px;}
-.toprow{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
-.tabrow{display:flex;border-bottom:1px solid #1a1a2e;margin-bottom:10px;}
-.tab{flex:1;text-align:center;padding:8px 2px;cursor:pointer;font-size:11px;color:#444;letter-spacing:1px;border-bottom:2px solid transparent;}
-.tab.on{color:#b388ff;border-bottom-color:#b388ff;}
-.clr{font-size:11px;color:#555;border:none;background:none;cursor:pointer;}
-.sg{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-bottom:6px;}
-.sc{aspect-ratio:1;background:#131320;border-radius:10px;border:1px solid #1e1e30;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:26px;position:relative;}
-.sc:active{outline:2px solid #b388ff;}
-.sc.lim{border-color:#b388ff55;}
-.sc.lim::after{content:'LTD';position:absolute;bottom:2px;right:3px;font-size:7px;color:#b388ff;}
-.pg{display:flex;flex-direction:column;gap:5px;max-height:200px;overflow-y:auto;}
-.pcat{font-size:9px;color:#444;letter-spacing:2px;margin:5px 0 2px;}
-.pb{background:#131320;border:1px solid #1e1e30;border-radius:8px;color:#bbb;padding:9px 11px;font-size:12px;cursor:pointer;text-align:left;line-height:1.5;font-family:sans-serif;width:100%;}
-.pb:active{border-color:#b388ff;color:#fff;}
-.or{display:flex;gap:5px;align-items:center;flex-wrap:wrap;}
-.cd{width:20px;height:20px;border-radius:50%;cursor:pointer;border:2px solid #333;flex-shrink:0;}
-.cd.on{border-color:#fff;transform:scale(1.2);}
-.tp{display:flex;flex-direction:column;gap:6px;}
-.ti{background:#131320;border:1px solid #1e1e30;border-radius:8px;color:#fff;padding:7px 11px;font-size:13px;width:100%;}
-.pr{font-size:15px;font-weight:500;text-align:center;min-height:20px;}
-.fb{font-size:10px;color:#555;border:1px solid #1e1e30;border-radius:5px;padding:4px 8px;cursor:pointer;background:#131320;}
-.fb.on{border-color:#b388ff;color:#b388ff;background:#1a0a2e;}
-.ab{background:#b388ff;color:#fff;border:none;border-radius:7px;padding:6px 12px;font-size:11px;cursor:pointer;margin-left:auto;}
-.divl{height:1px;background:#1a1a2e;margin:4px 0;}
-.npr{font-size:26px;font-weight:500;font-family:monospace;min-width:54px;text-align:center;}
-.np{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:5px;}
-.nk{background:#131320;border:1px solid #1e1e30;border-radius:7px;color:#fff;padding:8px;font-size:15px;cursor:pointer;text-align:center;}
-.nk:active{background:#1a0a2e;}
-.drow{display:flex;gap:5px;}
-.di{flex:1;background:#131320;border:1px solid #1e1e30;border-radius:7px;color:#fff;padding:7px 10px;font-size:12px;}
-.dab{background:#b388ff;color:#fff;border:none;border-radius:7px;padding:7px 12px;font-size:11px;cursor:pointer;}
-.ok{width:100%;background:#b388ff;color:#fff;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:500;cursor:pointer;letter-spacing:3px;margin-top:10px;}
-#scr-confirm{display:none;flex-direction:column;align-items:center;padding:24px;background:#0a0a0f;min-height:500px;justify-content:center;}
-.ctitle{font-size:18px;color:#fff;margin-bottom:18px;letter-spacing:4px;}
-#cc{position:relative;width:100%;max-width:260px;}
-#ct{width:100%;height:auto;display:block;}
-#cs{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;}
-.done{width:100%;max-width:260px;background:#b388ff;color:#fff;border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:500;cursor:pointer;margin-top:18px;letter-spacing:3px;}
-.bk{font-size:12px;color:#555;background:none;border:none;cursor:pointer;margin-top:10px;}
-#sleep-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0a0f;z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:20px;cursor:pointer;}
-.sl-txt{font-size:13px;color:#b388ff;letter-spacing:4px;animation:blink 2s infinite;}
+  :root{
+    --ink:#ECE7DB; --ink2:#9A93A8; --ink3:#645C74;
+    --accent:#AE92E0; --bright:#C9B6F2; --hair:rgba(201,182,242,.16); --hair2:rgba(201,182,242,.30);
+    --go:"Noto Sans JP",sans-serif; --min:"Shippori Mincho",serif;
+    --dock:rgba(12,10,26,.86);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;height:100%;}
+  body{
+    font-family:var(--go); color:var(--ink);
+    background:radial-gradient(900px 600px at 50% -10%,#1a1533,#0a0814 60%,#070510);
+    display:flex; align-items:center; justify-content:center; overflow:hidden;
+  }
+  /* ---- device card (portrait kiosk) ---- */
+  .device{
+    position:relative; height:min(95vh,880px); aspect-ratio:0.565;
+    border-radius:30px; overflow:hidden;
+    background:linear-gradient(178deg,#191338 0%,#120e26 46%,#0b0819 100%);
+    box-shadow:0 40px 120px -30px rgba(0,0,0,.85), 0 0 0 1px rgba(201,182,242,.08);
+  }
+  .screen{position:absolute; inset:0; display:none; flex-direction:column;}
+  .screen.on{display:flex;}
+
+  /* ---- header ---- */
+  .hd{display:flex; align-items:center; padding:18px 50px 6px; position:relative; flex:0 0 auto;}
+  .hd .back{position:absolute; left:14px; top:15px; background:none; border:0; color:var(--ink2); font-size:12px; cursor:pointer; padding:6px; font-family:var(--go); z-index:3;}
+  .hd .title{flex:1; text-align:center; font-size:13px; letter-spacing:.14em; color:var(--ink); font-weight:700;}
+  .hd .hint{position:absolute; left:0; right:0; top:44px; text-align:center; font-size:9.5px; letter-spacing:.32em; color:var(--ink3);}
+
+  /* ---- tee area ---- */
+  .teearea{flex:1 1 auto; position:relative; display:flex; align-items:center; justify-content:center; min-height:0; padding:12px;}
+  .colstrip{position:absolute; left:16px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:11px; z-index:5;}
+  .colstrip .sw{width:34px; height:34px; border-radius:9px; border:1px solid rgba(255,255,255,.15); cursor:pointer; transition:.15s;}
+  .colstrip .sw.on{box-shadow:0 0 0 2px var(--bright); border-color:var(--bright);}
+  .teebox{position:relative; height:min(96%,400px); aspect-ratio:1/1.1;}
+  .teebox.big{height:min(80%,560px);}
+  svg.tee{position:absolute; inset:0; width:100%; height:100%; filter:drop-shadow(0 24px 40px rgba(0,0,0,.5));}
+  .printArea{position:absolute; left:31%; top:28%; width:38%; height:41%;}
+  .printArea .fh{position:absolute; inset:0; border:1px dashed rgba(201,182,242,.4); border-radius:3px; pointer-events:none;}
+  .emptyHint{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; color:rgba(201,182,242,.45); font-family:var(--min); font-size:12px; pointer-events:none; line-height:1.6; padding:0 8px;}
+  .layer{position:absolute; inset:0;}
+  .el{position:absolute; transform-origin:center; cursor:grab; touch-action:none; user-select:none;}
+  .el.sel{outline:1.5px dashed var(--bright); outline-offset:5px;}
+  .el:active{cursor:grabbing;}
+  .el svg,.el img{display:block; width:100%; height:100%; pointer-events:none;}
+
+  /* floating tool pill for selected element */
+  .eltools{position:absolute; left:50%; bottom:12px; transform:translateX(-50%); display:none; flex-direction:column; align-items:center; gap:8px; z-index:8;}
+  .eltools.on{display:flex;}
+  .eltools .pill{display:flex; align-items:center; gap:4px; background:rgba(20,16,34,.92); border:1px solid var(--hair2); border-radius:999px; padding:5px;}
+  .eltools .pill button{border:0; background:none; color:var(--ink); font-family:var(--go); font-size:11.5px; padding:7px 12px; border-radius:999px; cursor:pointer; display:flex; align-items:center; gap:5px; white-space:nowrap;}
+  .eltools .pill button.act{background:rgba(174,146,224,.22); color:var(--bright);}
+  .eltools .pill button.trash{color:#E58AA6;}
+  .eltools .slide{display:none; width:190px; background:rgba(20,16,34,.92); border:1px solid var(--hair2); border-radius:12px; padding:10px 14px;}
+  .eltools .slide.on{display:block;}
+  .eltools .slide input{width:100%; accent-color:var(--accent);}
+
+  /* ---- start screen ---- */
+  .start{align-items:center; justify-content:space-between; text-align:center; position:relative; overflow:hidden; padding:54px 20px 58px;}
+  .bokeh{position:absolute; border-radius:50%; filter:blur(38px); opacity:.55;}
+  .start .ghosttee{position:absolute; top:52%; left:50%; transform:translate(-50%,-50%); width:62%; opacity:.9; filter:drop-shadow(0 30px 50px rgba(0,0,0,.5));}
+  .starttop{position:relative; z-index:2;}
+  .start .title{font-family:var(--min); font-weight:700; font-size:32px; letter-spacing:.04em; color:var(--ink); position:relative; z-index:2;}
+  .start .title b{color:var(--bright);}
+  .start .subt{font-size:11px; letter-spacing:.5em; color:rgba(201,182,242,.6); position:relative; z-index:2; margin-top:10px;}
+  .start .startbtn{position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; gap:10px; cursor:pointer;}
+  .start .ring{width:66px; height:66px; border-radius:50%; border:2px solid rgba(201,182,242,.6); position:relative; animation:pulse 2.4s ease-in-out infinite;}
+  .start .ring::after{content:""; position:absolute; inset:10px; border-radius:50%; background:radial-gradient(circle,rgba(201,182,242,.5),transparent 70%);}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(201,182,242,.35);}50%{box-shadow:0 0 0 12px rgba(201,182,242,0);}}
+  .start .tap{font-size:15px; font-weight:700; letter-spacing:.22em; color:var(--ink);}
+  .start .tapj{font-size:11px; color:var(--ink2); letter-spacing:.14em;}
+
+  /* ---- bottom sections ---- */
+  .bottom{flex:0 0 auto; padding:12px 18px 16px;}
+  .bcap{text-align:center; font-size:10px; letter-spacing:.2em; color:var(--ink3); margin-bottom:12px;}
+  .itemcards{display:flex; gap:14px;}
+  .itemcard{flex:1; background:rgba(255,255,255,.03); border:1px solid var(--hair); border-radius:16px; padding:18px 10px; text-align:center; cursor:pointer; transition:.15s;}
+  .itemcard:hover,.itemcard.on{border-color:var(--accent); background:rgba(174,146,224,.12);}
+  .itemcard.disabled{opacity:.4; pointer-events:none;}
+  .itemcard .ic{font-size:30px;}
+  .itemcard .nm{font-size:14px; font-weight:700; margin-top:8px;}
+  .itemcard .en{font-size:9.5px; letter-spacing:.2em; color:var(--ink3); margin-top:3px;}
+  .sizepills{display:flex; gap:8px; justify-content:center;}
+  .sizepills button{width:44px; height:44px; border-radius:11px; border:1px solid var(--hair); background:transparent; color:var(--ink2); font-size:14px; cursor:pointer; transition:.15s;}
+  .sizepills button.on{background:var(--ink); color:#14121C; font-weight:700; border-color:var(--ink);}
+  .cont{width:100%; margin-top:12px; padding:14px; border:0; border-radius:14px; background:linear-gradient(180deg,#EDE8DE,#CFC6E6); color:#171233; font-family:var(--go); font-weight:700; font-size:15px; letter-spacing:.16em; cursor:pointer;}
+  .cont:active{transform:translateY(1px);}
+
+  /* ---- design dock ---- */
+  .dock{flex:0 0 auto; background:var(--dock); border-top:1px solid var(--hair); padding:10px 16px 12px; backdrop-filter:blur(8px);}
+  .dockrow{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;}
+  .tabs,.fb{display:inline-flex; background:rgba(255,255,255,.05); border:1px solid var(--hair); border-radius:999px; padding:3px;}
+  .tabs button,.fb button{border:0; background:none; color:var(--ink2); font-family:var(--go); font-size:12.5px; padding:8px 18px; border-radius:999px; cursor:pointer;}
+  .tabs button.on{background:var(--bright); color:#171233; font-weight:700;}
+  .fb button{padding:8px 14px; font-size:11px; letter-spacing:.06em;}
+  .fb button.on{background:rgba(174,146,224,.25); color:var(--bright); font-weight:700;}
+  .plabel{font-size:10px; color:var(--ink3); letter-spacing:.06em; margin:2px 0 6px;}
+  .dots{display:flex; gap:10px; margin-bottom:10px;}
+  .dot{width:26px; height:26px; border-radius:50%; border:1px solid rgba(255,255,255,.2); cursor:pointer;}
+  .dot.none{background:transparent; position:relative;}
+  .dot.none::after{content:""; position:absolute; inset:6px; border-radius:50%; border:1.5px solid var(--ink2);}
+  .dot.on{box-shadow:0 0 0 2px var(--bright);}
+  .stamprow{display:flex; gap:12px; overflow-x:auto; padding-bottom:6px; -webkit-overflow-scrolling:touch;}
+  .stamprow::-webkit-scrollbar{height:4px;} .stamprow::-webkit-scrollbar-thumb{background:var(--hair2); border-radius:4px;}
+  .stampbtn{flex:0 0 auto; width:52px; height:52px; border-radius:14px; border:1px solid var(--hair); background:rgba(255,255,255,.04); display:flex; align-items:center; justify-content:center; color:var(--ink); cursor:pointer; transition:.15s;}
+  .stampbtn:hover{border-color:var(--accent); background:rgba(174,146,224,.14);}
+  .stampbtn svg{width:54%; height:54%; fill:currentColor;}
+  .stampbtn.up{font-size:10px; color:var(--ink2); flex-direction:column; gap:3px; letter-spacing:.1em;}
+  .stampbtn.up svg{width:40%; height:40%; fill:none; stroke:currentColor; stroke-width:1.6;}
+  .textwrap{display:flex; gap:10px; margin-bottom:12px;}
+  .textwrap input{flex:1; padding:12px 14px; border-radius:11px; border:1px solid var(--hair); background:rgba(255,255,255,.04); color:var(--ink); font-family:var(--go); font-size:15px;}
+  .textwrap input:focus{outline:none; border-color:var(--accent);}
+  .addbtn{border:0; border-radius:11px; background:rgba(174,146,224,.9); color:#171233; font-weight:700; font-size:13px; padding:0 18px; cursor:pointer;}
+  .fontrow{display:flex; gap:10px; overflow-x:auto; padding-bottom:4px;}
+  .fontbtn{flex:0 0 auto; width:64px; height:56px; border-radius:12px; border:1px solid var(--hair); background:rgba(255,255,255,.04); color:var(--ink); cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;}
+  .fontbtn.on{border-color:var(--accent); background:rgba(174,146,224,.16);}
+  .fontbtn .aa{font-size:19px; line-height:1;}
+  .fontbtn .lb{font-size:8.5px; color:var(--ink3); letter-spacing:.08em;}
+
+  /* ---- confirm ---- */
+  .cf{padding:22px; overflow:auto;}
+  .cf h2{font-family:var(--min); font-weight:700; font-size:22px; margin:6px 0 2px; text-align:center;}
+  .cf .lead{font-size:11.5px; color:var(--ink2); text-align:center; margin:0 0 18px; line-height:1.6;}
+  .cfmini{display:flex; gap:12px; margin-bottom:14px;}
+  .cfmini .m{flex:1; background:rgba(255,255,255,.03); border:1px solid var(--hair); border-radius:14px; padding:10px; text-align:center;}
+  .cfmini .cap{font-size:9px; letter-spacing:.24em; color:var(--ink3); margin-bottom:6px;}
+  .cfmini .ms{width:100%; aspect-ratio:1/1.1; position:relative;}
+  .qrbox{display:flex; gap:16px; align-items:center; background:rgba(255,255,255,.03); border:1px solid var(--hair); border-radius:14px; padding:16px; margin-bottom:16px;}
+  #qr{width:104px; height:104px; background:var(--ink); border-radius:9px; padding:8px; flex:0 0 auto;}
+  .sm{font-size:12px; color:var(--ink2); line-height:1.9;} .sm b{color:var(--ink);}
+  .cfacts{display:flex; gap:10px;}
+  .cfacts .cont{margin-top:0;}
+  .ghost{background:transparent!important; border:1px solid var(--hair2)!important; color:var(--ink2)!important; flex:0 0 40%;}
+
+  .foot{flex:0 0 auto; text-align:center; font-family:var(--min); font-size:11px; color:var(--ink2); padding:0 16px 12px;}
+  .foot b{color:var(--bright); font-weight:600;}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important;}}
 </style>
+</head>
+<body>
+<div class="device" id="device">
 
-<div id="sleep-overlay" onclick="wakeUp()">
-  <div style="font-size:40px;">🌙</div>
-  <div class="sl-txt">TAP TO WAKE</div>
-</div>
-
-<div id="app">
-  <div id="scr-title" onclick="showEdit()">
-    <div class="nb">
-      <div class="lm">ZUTOMAYO × YR JAPAN</div>
-      <div class="lt">カスタム<br>スタジオ</div>
-      <div class="ls">T-SHIRT DESIGNER</div>
-      <div class="tt">TAP TO GET STARTED</div>
+  <!-- ============ START ============ -->
+  <section class="screen on start" id="scStart">
+    <div class="bokeh" style="width:150px;height:150px;background:#7B6FD0;left:8%;top:14%"></div>
+    <div class="bokeh" style="width:130px;height:130px;background:#C97FA8;right:6%;top:34%"></div>
+    <div class="bokeh" style="width:150px;height:150px;background:#C7A25A;left:14%;bottom:20%"></div>
+    <div class="bokeh" style="width:170px;height:170px;background:#5E9E86;right:14%;bottom:8%"></div>
+    <svg class="ghosttee" viewBox="0 0 500 560" id="ghostTee"></svg>
+    <div class="starttop">
+      <div class="title">ZUTOMAYO <b>LABO</b></div>
+      <div class="subt">CREATE YOUR OWN</div>
     </div>
-  </div>
-
-  <div id="scr-edit">
-    <div class="eh">
-      <button class="bb" onclick="showTitle()">&#8249;</button>
-      <div class="et">DESIGN YOUR TEE</div>
-      <button class="thbtn" onclick="toggleTheme()">DARK/LIGHT</button>
+    <div class="startbtn" id="startBtn">
+      <div class="ring"></div>
+      <div class="tap">TAP TO START</div>
+      <div class="tapj">タッチしてはじめる</div>
     </div>
-    <div id="tc">
-      <div id="tw">
-        <svg id="ts" viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg">
-          <path id="tee" d="M80,10 L50,30 L10,50 L30,90 L60,75 L60,260 L240,260 L240,75 L270,90 L290,50 L250,30 L220,10 Q180,30 150,30 Q120,30 80,10 Z" fill="#ffffff" stroke="#ddd" stroke-width="1"/>
-        </svg>
-        <div id="dl"></div>
+  </section>
+
+  <!-- ============ BODY ============ -->
+  <section class="screen" id="scBody">
+    <div class="hd"><button class="back" data-go="scStart">‹ もどる</button><div class="title">SELECT BODY</div></div>
+    <div class="teearea">
+      <div class="colstrip" data-strip="body"></div>
+      <div class="teebox big"><svg class="tee" data-tee="body"></svg></div>
+    </div>
+    <div class="bottom">
+      <div class="bcap">つくるアイテムを選ぶ</div>
+      <div class="itemcards">
+        <div class="itemcard on" id="cardTee"><div class="ic">👕</div><div class="nm">Tシャツ</div><div class="en">CREW TEE</div></div>
+        <div class="itemcard disabled"><div class="ic">👜</div><div class="nm">トート</div><div class="en">TOTE BAG</div></div>
+      </div>
+      <button class="cont" data-go="scSize">CONTINUE →</button>
+    </div>
+  </section>
+
+  <!-- ============ SIZE ============ -->
+  <section class="screen" id="scSize">
+    <div class="hd"><button class="back" data-go="scBody">‹ もどる</button><div class="title">SELECT SIZE</div></div>
+    <div class="teearea">
+      <div class="colstrip" data-strip="size"></div>
+      <div class="teebox big"><svg class="tee" data-tee="size"></svg>
+        <div class="printArea"><div class="fh"></div></div>
       </div>
     </div>
-    <div class="bot">
-      <div class="toprow">
-        <div class="tabrow" style="flex:1;margin-right:8px;margin-bottom:0;border:none;">
-          <div class="tab on" onclick="sw('stamp')" id="tab-stamp">STAMP</div>
-          <div class="tab" onclick="sw('phrase')" id="tab-phrase">PHRASE</div>
-          <div class="tab" onclick="sw('text')" id="tab-text">TEXT/DATE</div>
-        </div>
-        <button class="clr" onclick="clearAll()">All Clear</button>
-      </div>
-      <div style="border-bottom:1px solid #1a1a2e;margin:6px 0 10px;"></div>
+    <div class="bottom">
+      <div class="bcap">サイズを選ぶ — プリント範囲は点線の通り</div>
+      <div class="sizepills" id="sizePills"></div>
+      <button class="cont" data-go="scDesign">CONTINUE →</button>
+    </div>
+  </section>
 
-      <div id="panel-stamp">
-        <div style="font-size:9px;color:#444;letter-spacing:1px;margin-bottom:7px;">STAMPS　紫枠=会場限定</div>
-        <div class="sg">
-          <div class="sc" onclick="addS('🕐')">🕐</div>
-          <div class="sc" onclick="addS('🦋')">🦋</div>
-          <div class="sc" onclick="addS('🌙')">🌙</div>
-          <div class="sc" onclick="addS('⭐')">⭐</div>
-          <div class="sc" onclick="addS('🌸')">🌸</div>
-          <div class="sc lim" onclick="addS('🎵')">🎵</div>
-          <div class="sc lim" onclick="addS('✨')">✨</div>
-          <div class="sc lim" onclick="addS('🌊')">🌊</div>
-          <div class="sc lim" onclick="addS('🖤')">🖤</div>
-          <div class="sc lim" onclick="addS('🎸')">🎸</div>
+  <!-- ============ DESIGN ============ -->
+  <section class="screen" id="scDesign">
+    <div class="hd"><button class="back" data-go="scSize">‹ もどる</button><div class="title">DESIGN YOUR TEE</div></div>
+    <div class="teearea">
+      <div class="colstrip" data-strip="design"></div>
+      <div class="teebox"><svg class="tee" data-tee="design"></svg>
+        <div class="printArea" id="printArea">
+          <div class="fh"></div>
+          <div class="emptyHint" id="emptyHint">ここに、あなたの<br>「　」を。</div>
+          <div class="layer" id="layerFront"></div>
+          <div class="layer" id="layerBack" style="display:none"></div>
         </div>
-      </div>
-
-      <div id="panel-phrase" style="display:none;">
-        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
-          <span style="font-size:9px;color:#444;">色:</span>
-          <button id="pc-blk" onclick="setPc('black')" style="flex:1;padding:7px;border-radius:8px;border:2px solid #b388ff;background:#111;color:#fff;font-size:12px;cursor:pointer;">● 黒</button>
-          <button id="pc-wht" onclick="setPc('white')" style="flex:1;padding:7px;border-radius:8px;border:1px solid #333;background:#fff;color:#111;font-size:12px;cursor:pointer;">● 白</button>
-          <span style="font-size:9px;color:#555;">← 選んでタップ</span>
-        </div>
-        <div class="pg">
-          <div class="pcat">— 歌詞フレーズ —</div>
-          <button class="pb" onclick="addP(this)">勝手に花を咲かせていたんだ</button>
-          <button class="pb" onclick="addP(this)">秒針を噛み切れたら</button>
-          <button class="pb" onclick="addP(this)">眠れないなら一緒に朝を待とう</button>
-          <button class="pb" onclick="addP(this)">ずっと真夜中でいいのに</button>
-          <button class="pb" onclick="addP(this)">全部夢だったとしても</button>
-          <button class="pb" onclick="addP(this)">あなたとなら眠れそう</button>
-          <button class="pb" onclick="addP(this)">消えない傷跡が好きだった</button>
-          <button class="pb" onclick="addP(this)">誰かの心臓で泣かないで</button>
-          <div class="pcat">— ACAねの言葉 —</div>
-          <button class="pb" onclick="addP(this)">夜を愛してる人、集まれ</button>
-          <button class="pb" onclick="addP(this)">音楽は逃げ場になれる</button>
-          <button class="pb" onclick="addP(this)">好きなものを好きでいていい</button>
-          <button class="pb" onclick="addP(this)">真夜中に生きてる人たちへ</button>
-        </div>
-      </div>
-
-      <div id="panel-text" style="display:none;">
-        <div class="tp">
-          <div id="tpr" class="pr" style="color:#fff;font-family:sans-serif;"></div>
-          <input class="ti" type="text" id="ti" placeholder="テキストを入力" maxlength="16" oninput="updPr()"/>
-          <div class="or">
-            <button class="fb on" onclick="setF(this,'sans-serif')">ゴシック</button>
-            <button class="fb" onclick="setF(this,'serif')">明朝</button>
-            <button class="fb" onclick="setF(this,'cursive')">筆記体</button>
-            <button class="fb" onclick="setF(this,'monospace')">等幅</button>
+        <div class="eltools" id="eltools">
+          <div class="slide" id="slideBox"><input type="range" id="slideInput"></div>
+          <div class="pill">
+            <button id="tSize">✎ 大きさ</button>
+            <button id="tRot">↻ 回転</button>
+            <button class="trash" id="tDel">🗑</button>
           </div>
-          <div class="or">
-            <span style="font-size:9px;color:#444;">色:</span>
-            <div class="cd on" style="background:#fff;" onclick="setC(this,'#ffffff')"></div>
-            <div class="cd" style="background:#b388ff;" onclick="setC(this,'#b388ff')"></div>
-            <div class="cd" style="background:#ff6b9d;" onclick="setC(this,'#ff6b9d')"></div>
-            <div class="cd" style="background:#5ce1e6;" onclick="setC(this,'#5ce1e6')"></div>
-            <div class="cd" style="background:#ffd700;" onclick="setC(this,'#ffd700')"></div>
-            <div class="cd" style="background:#111;border-color:#555;" onclick="setC(this,'#111111')"></div>
-            <button class="ab" onclick="addT()">追加</button>
-          </div>
-          <div class="divl"></div>
-          <div style="font-size:9px;color:#444;margin-bottom:8px;letter-spacing:1px;">DATE — スクロールで選択</div>
-          <div style="display:flex;gap:6px;margin-bottom:8px;">
-            <div style="flex:1;text-align:center;">
-              <div style="font-size:9px;color:#555;margin-bottom:4px;">年</div>
-              <select id="sel-year" style="width:100%;background:#131320;border:1px solid #1e1e30;border-radius:7px;color:#fff;padding:7px 4px;font-size:13px;text-align:center;"></select>
-            </div>
-            <div style="flex:1;text-align:center;">
-              <div style="font-size:9px;color:#555;margin-bottom:4px;">月</div>
-              <select id="sel-month" style="width:100%;background:#131320;border:1px solid #1e1e30;border-radius:7px;color:#fff;padding:7px 4px;font-size:13px;text-align:center;"></select>
-            </div>
-            <div style="flex:1;text-align:center;">
-              <div style="font-size:9px;color:#555;margin-bottom:4px;">日</div>
-              <select id="sel-day" style="width:100%;background:#131320;border:1px solid #1e1e30;border-radius:7px;color:#fff;padding:7px 4px;font-size:13px;text-align:center;"></select>
-            </div>
-          </div>
-          <div style="margin-bottom:8px;">
-            <div style="font-size:9px;color:#555;margin-bottom:4px;">場所</div>
-            <select id="sel-place" style="width:100%;background:#131320;border:1px solid #1e1e30;border-radius:7px;color:#fff;padding:7px 10px;font-size:13px;"></select>
-          </div>
-          <div id="date-preview" style="font-size:13px;font-family:monospace;color:#b388ff;text-align:center;margin-bottom:6px;min-height:18px;"></div>
-          <button class="ab" style="width:100%;" onclick="addD()">日付を追加</button>
         </div>
       </div>
-
-      <button class="ok" onclick="showConfirm()">OK — 確認する</button>
     </div>
-  </div>
-
-  <div id="scr-confirm">
-    <div class="ctitle">Are you Ready?</div>
-    <div id="cc">
-      <svg id="ct" viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg">
-        <path id="ctee" d="M80,10 L50,30 L10,50 L30,90 L60,75 L60,260 L240,260 L240,75 L270,90 L290,50 L250,30 L220,10 Q180,30 150,30 Q120,30 80,10 Z" fill="#ffffff" stroke="#ddd" stroke-width="1"/>
-      </svg>
-      <div id="cs"></div>
+    <div class="dock">
+      <div class="dockrow">
+        <div class="tabs" id="tabs"><button data-tab="stamp" class="on">STAMP</button><button data-tab="text">TEXT</button></div>
+        <div class="fb" id="fb"><button data-side="front" class="on">FRONT</button><button data-side="back">BACK</button></div>
+      </div>
+      <div class="plabel">プリントカラー（柄・文字の色）</div>
+      <div class="dots" id="dots"></div>
+      <div id="tabStamp">
+        <div class="stamprow" id="stamprow"></div>
+      </div>
+      <div id="tabText" style="display:none">
+        <div class="textwrap"><input type="text" id="tin" placeholder="歌詞やことばを入力" maxlength="30"><button class="addbtn" id="addTxt">＋ ADD</button></div>
+        <div class="fontrow" id="fontrow"></div>
+      </div>
+      <button class="cont" data-go="scConfirm">CONTINUE →</button>
     </div>
-    <button class="done">DONE — プリントへ</button>
-    <button class="bk" onclick="showEdit()">&#8249; 戻って編集する</button>
-  </div>
+    <div class="foot">会場で、あなただけの<b>「　」</b>を、その場でつくって持ち帰る。</div>
+  </section>
+
+  <!-- ============ CONFIRM ============ -->
+  <section class="screen" id="scConfirm">
+    <div class="cf">
+      <h2>この内容でつくりますか？</h2>
+      <p class="lead">その場でプリントして、お渡しします。<br>受け取りコードは完成後に発行されます。</p>
+      <div class="cfmini">
+        <div class="m"><div class="cap">FRONT</div><div class="ms" id="miniFront"></div></div>
+        <div class="m"><div class="cap">BACK</div><div class="ms" id="miniBack"></div></div>
+      </div>
+      <div class="qrbox">
+        <canvas id="qr" width="104" height="104"></canvas>
+        <div><div class="cap" style="font-size:10px;letter-spacing:.12em;color:var(--ink2);margin-bottom:8px">受け取りコード</div><div class="sm" id="summary"></div></div>
+      </div>
+      <div class="cfacts">
+        <button class="cont ghost" data-go="scDesign">もどる</button>
+        <button class="cont" id="makeBtn">この内容でつくる</button>
+      </div>
+    </div>
+  </section>
+
 </div>
 
 <script>
-var isDark=true,ns='',sel=null,cf='sans-serif',cc='#ffffff',cnc='#ffffff',pc='#111111';
-var stimer=null;
-function g(i){return document.getElementById(i);}
-function resetSleep(){clearTimeout(stimer);stimer=setTimeout(function(){g('sleep-overlay').style.display='flex';},60000);}
-function wakeUp(){g('sleep-overlay').style.display='none';resetSleep();}
-document.getElementById('app').addEventListener('pointerdown',function(){resetSleep();});
-resetSleep();
-function showTitle(){g('scr-title').style.display='flex';g('scr-edit').style.display='none';g('scr-confirm').style.display='none';}
-function showEdit(){g('scr-title').style.display='none';g('scr-edit').style.display='flex';g('scr-confirm').style.display='none';}
-function showConfirm(){
-  g('scr-title').style.display='none';g('scr-edit').style.display='none';g('scr-confirm').style.display='flex';
-  var src=g('tw'),dst=g('cs');dst.innerHTML='';
-  var sr=src.getBoundingClientRect(),dw=g('cc').offsetWidth||260;
-  g('cc').style.height=(sr.height*(dw/sr.width))+'px';
-  dst.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;';
-  g('ctee').setAttribute('fill',g('tee').getAttribute('fill'));
-  g('ctee').setAttribute('stroke',g('tee').getAttribute('stroke'));
-  g('dl').querySelectorAll('.si').forEach(function(el){
-    var c=el.cloneNode(true);c.querySelectorAll('.db').forEach(function(b){b.remove();});
-    c.classList.remove('sel');c.style.pointerEvents='none';dst.appendChild(c);
+/* ================= data ================= */
+const MOTIFS = {
+  moon:'<path d="M60 10a40 40 0 1 0 30 66A48 48 0 0 1 60 10z"/>',
+  star4:'<path d="M50 2l10 38 38 10-38 10-10 38-10-38L2 50l38-10z"/>',
+  spark:'<path d="M50 6l6 30 30 6-30 6-6 30-6-30-30-6 30-6z"/><circle cx="82" cy="20" r="5"/><circle cx="20" cy="80" r="4"/>',
+  wave:'<path d="M4 50q12-22 24 0t24 0 24 0 24 0" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round"/>',
+  bars:'<rect x="12" y="40" width="9" height="20" rx="3"/><rect x="30" y="26" width="9" height="48" rx="3"/><rect x="48" y="14" width="9" height="72" rx="3"/><rect x="66" y="30" width="9" height="40" rx="3"/><rect x="84" y="44" width="9" height="12" rx="3"/>',
+  ring:'<ellipse cx="50" cy="50" rx="40" ry="14" fill="none" stroke="currentColor" stroke-width="6"/><circle cx="50" cy="50" r="15"/>',
+  note:'<path d="M40 14h34v10H50v46a14 12 0 1 1-8-11V14z"/>',
+  bolt:'<path d="M56 4L20 56h22l-8 40 44-58H54z"/>',
+  heart:'<path d="M50 86C18 62 12 40 26 28c10-8 20-2 24 6 4-8 14-14 24-6 14 12 8 34-24 58z"/>',
+  drop:'<path d="M50 8C30 40 22 54 22 66a28 28 0 0 0 56 0c0-12-8-26-28-58z"/>'
+};
+const MOTIF_ORDER=['moon','star4','spark','wave','bars','ring','note','bolt','heart','drop'];
+const BASECOLORS=[['#1E1B33','ミッドナイト'],['#15131C','ブラック'],['#ECE7DB','オフホワイト'],['#B9A7E0','ライラック'],['#4A3A7A','バイオレット'],['#1F4B47','ティール'],['#C7A25A','ゴールド']];
+const PRINTCOLORS=['none','#ECE7DB','#C9B6F2','#AE92E0','#E58AA6','#6FD6C2','#E9C877'];
+const FONTS=[['min','明朝','"Shippori Mincho",serif'],['go','ゴシック','"Noto Sans JP",sans-serif'],['maru','丸ゴ','"Zen Maru Gothic",sans-serif'],['pop','ポップ','"Mochiy Pop One",sans-serif'],['fude','筆','"Yuji Syuku",serif']];
+const SIZES=['XS','S','M','L','XL','XXL'];
+
+let uid=1;
+const state={screen:'scStart', base:'#1E1B33', size:'M', side:'front', tab:'stamp',
+  printColor:'#ECE7DB', font:'min', front:[], back:[], selId:null};
+
+/* ================= tee svg ================= */
+function teeSVG(base, kind){
+  const light = isLight(base);
+  const stroke = light? 'rgba(0,0,0,.28)':'rgba(0,0,0,.4)';
+  const collar = kind==='back'
+    ? `<path d="M196 40c0 16 42 18 78 18s78-2 78-18" fill="rgba(0,0,0,.25)"/>`
+    : `<path d="M196 40c0 24 42 26 78 26s78-2 78-26" fill="none" stroke="${stroke}" stroke-width="3"/>`;
+  const d="M196 36 L120 72 58 150 96 200 146 172 146 524 354 524 354 172 404 200 442 150 380 72 304 36 C304 36 292 66 250 66 208 66 196 36 196 36 Z";
+  return `<svg class="tee" viewBox="0 0 500 560" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="v" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="rgba(255,255,255,.14)"/><stop offset=".5" stop-color="rgba(255,255,255,0)"/><stop offset="1" stop-color="rgba(0,0,0,.22)"/>
+      </linearGradient>
+      <radialGradient id="c" cx="50%" cy="40%" r="60%">
+        <stop offset="0" stop-color="rgba(255,255,255,.10)"/><stop offset="1" stop-color="rgba(0,0,0,0)"/>
+      </radialGradient>
+    </defs>
+    <path d="${d}" fill="${base}" stroke="${stroke}" stroke-width="2" stroke-linejoin="round"/>
+    <path d="${d}" fill="url(#v)"/><path d="${d}" fill="url(#c)"/>
+    ${collar}
+  </svg>`;
+}
+function isLight(hex){const c=hex.replace('#','');const r=parseInt(c.substr(0,2),16),g=parseInt(c.substr(2,2),16),b=parseInt(c.substr(4,2),16);return (0.299*r+0.587*g+0.114*b)>150;}
+function paintTees(){
+  document.querySelectorAll('svg.tee[data-tee]').forEach(sv=>{
+    const kind = sv.dataset.tee;
+    const wrap=document.createElement('div'); wrap.innerHTML=teeSVG(state.base, kind==='design'?state.side:'front');
+    const nv=wrap.firstElementChild; nv.dataset.tee=kind; sv.replaceWith(nv);
   });
 }
-function toggleTheme(){isDark=!isDark;g('tee').setAttribute('fill',isDark?'#ffffff':'#1a0a2e');g('tee').setAttribute('stroke',isDark?'#ddd':'#b388ff');g('app').style.background=isDark?'#0a0a0f':'#f0ebff';}
-function sw(t){['stamp','phrase','text'].forEach(function(n){g('panel-'+n).style.display=n===t?'block':'none';g('tab-'+n).classList.toggle('on',n===t);});}
-function clearAll(){g('dl').innerHTML='';sel=null;ns='';g('npr').textContent='—';}
-function updPr(){var p=g('tpr');p.textContent=g('ti').value;p.style.color=cc;p.style.fontFamily=cf;}
-function setF(b,f){cf=f;b.closest('.or').querySelectorAll('.fb').forEach(function(x){x.classList.remove('on');});b.classList.add('on');g('tpr').style.fontFamily=f;}
-function setC(d,c){cc=c;d.closest('.or').querySelectorAll('.cd').forEach(function(x){x.classList.remove('on');});d.classList.add('on');g('tpr').style.color=c;}
-function setNC(d,c){cnc=c;d.closest('.or').querySelectorAll('.cd').forEach(function(x){x.classList.remove('on');});d.classList.add('on');g('npr').style.color=c;}
-function setPc(c){
-  pc=c==='black'?'#111111':'#ffffff';
-  g('pc-blk').style.border=c==='black'?'2px solid #b388ff':'1px solid #333';
-  g('pc-wht').style.border=c==='white'?'2px solid #b388ff':'1px solid #333';
-}
-function addS(e){var el=mk('position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(1) rotate(0deg);font-size:48px;width:66px;height:66px;display:flex;align-items:center;justify-content:center;touch-action:none;cursor:grab;');var s=document.createElement('span');s.textContent=e;s.style.pointerEvents='none';el.appendChild(s);el.appendChild(mkd(el));g('dl').appendChild(el);drag(el);selEl(el);}
-function addP(b){
-  var el=mk('position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(1) rotate(0deg);color:'+pc+';font-size:13px;font-weight:500;white-space:nowrap;touch-action:none;cursor:grab;display:flex;align-items:center;padding:2px 4px;');
-  var s=document.createElement('span');s.textContent=b.textContent;s.style.pointerEvents='none';
-  el.appendChild(s);el.appendChild(mkd(el));g('dl').appendChild(el);drag(el);selEl(el);
-}
-function addT(){var v=g('ti').value.trim();if(!v)return;var el=mk('position:absolute;left:50%;top:45%;transform:translate(-50%,-50%) scale(1) rotate(0deg);color:'+cc+';font-size:20px;font-weight:500;font-family:'+cf+';white-space:nowrap;touch-action:none;cursor:grab;display:flex;align-items:center;padding:2px 4px;');var s=document.createElement('span');s.textContent=v;s.style.pointerEvents='none';el.appendChild(s);el.appendChild(mkd(el));g('dl').appendChild(el);drag(el);selEl(el);g('ti').value='';g('tpr').textContent='';}
-function addN(){if(!ns)return;var el=mk('position:absolute;left:50%;top:45%;transform:translate(-50%,-50%) scale(1) rotate(0deg);color:'+cnc+';font-size:36px;font-weight:500;font-family:monospace;white-space:nowrap;touch-action:none;cursor:grab;display:flex;align-items:center;padding:2px 4px;');var s=document.createElement('span');s.textContent=ns;s.style.pointerEvents='none';el.appendChild(s);el.appendChild(mkd(el));g('dl').appendChild(el);drag(el);selEl(el);ns='';g('npr').textContent='—';}
-function addD(){
-  var y=g('sel-year').value,m=g('sel-month').value,d=g('sel-day').value,p=g('sel-place').value;
-  var v=y+'.'+m+'.'+d+'  '+p;var el=mk('position:absolute;left:50%;top:55%;transform:translate(-50%,-50%) scale(1) rotate(0deg);color:'+cc+';font-size:14px;font-weight:500;font-family:monospace;white-space:nowrap;touch-action:none;cursor:grab;display:flex;align-items:center;padding:2px 4px;');var s=document.createElement('span');s.textContent=v;s.style.pointerEvents='none';el.appendChild(s);el.appendChild(mkd(el));g('dl').appendChild(el);drag(el);selEl(el);g('di').value='';}
-function ni(v){ns=(ns+v).slice(0,2);var p=g('npr');p.textContent=ns||'—';p.style.color=cnc;}
-function nc(){ns='';g('npr').textContent='—';}
-function nd(){ns=ns.slice(0,-1);g('npr').textContent=ns||'—';}
+document.getElementById('ghostTee').outerHTML = teeSVG('#EDE8DE','front').replace('class="tee"','class="ghosttee" id="ghostTee"');
 
-var places=['TOKYO','OSAKA','NAGOYA','SAPPORO','FUKUOKA','SENDAI','YOKOHAMA','KYOTO','HIROSHIMA','NAHA'];
-function buildSelects(){
-  var yr=g('sel-year'),mo=g('sel-month'),dy=g('sel-day'),pl=g('sel-place');
-  var now=new Date();
-  for(var y=now.getFullYear();y<=now.getFullYear()+2;y++){var o=document.createElement('option');o.value=y;o.textContent=y+'年';yr.appendChild(o);}
-  for(var m=1;m<=12;m++){var o=document.createElement('option');o.value=m;o.textContent=m+'月';mo.appendChild(o);}
-  mo.value=now.getMonth()+1;
-  for(var d=1;d<=31;d++){var o=document.createElement('option');o.value=d;o.textContent=d+'日';dy.appendChild(o);}
-  dy.value=now.getDate();
-  places.forEach(function(p){var o=document.createElement('option');o.value=p;o.textContent=p;pl.appendChild(o);});
-  [yr,mo,dy,pl].forEach(function(s){s.addEventListener('change',updateDatePreview);});
-  updateDatePreview();
+/* ================= elements (design) ================= */
+function curArr(){return state[state.side];}
+function layerEl(){return document.getElementById(state.side==='front'?'layerFront':'layerBack');}
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function fontStack(f){return (FONTS.find(x=>x[0]===f)||FONTS[0])[2];}
+
+function elInner(el){
+  if(el.kind==='motif') return `<svg viewBox="0 0 100 100" style="color:${el.color}">${MOTIFS[el.motif]}</svg>`;
+  if(el.kind==='image') return `<img src="${el.src}" style="width:100%;height:auto;display:block">`;
+  if(el.kind==='text'){
+    const size=el.fs, w=Math.max(30, el.text.length*size*(el.font==='min'||el.font==='fude'?1.05:0.98))+16, h=size*1.5;
+    return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" style="overflow:visible"><text x="${w/2}" y="${h*0.72}" text-anchor="middle" font-family='${fontStack(el.font)}' font-size="${size}" font-weight="700" fill="${el.color}">${escapeHtml(el.text)}</text></svg>`;
+  }
+  return '';
 }
-function updateDatePreview(){
-  var y=g('sel-year').value,m=g('sel-month').value,d=g('sel-day').value,p=g('sel-place').value;
-  g('date-preview').textContent=y+'.'+m+'.'+d+'  '+p;
+function buildEl(el){
+  const d=document.createElement('div'); d.className='el'; d.dataset.id=el.id; el._dom=d;
+  paintEl(el); applyT(el); dragEl(el); return d;
 }
-buildSelects();function mk(css){var el=document.createElement('div');el.className='si';el.dataset.scale='1';el.dataset.rot='0';el.style.cssText=css;return el;}
-function mkd(el){var db=document.createElement('button');db.className='db';db.textContent='x';db.onclick=function(e){e.stopPropagation();el.remove();if(sel===el)sel=null;};return db;}
-function selEl(el){if(sel&&sel!==el)sel.classList.remove('sel');sel=el;if(el)el.classList.add('sel');}
-function drag(el){
-  var sx,sy,ex,ey,ac=false;
-  el.addEventListener('pointerdown',function(e){if(e.target.classList.contains('db'))return;selEl(el);e.preventDefault();ac=true;sx=e.clientX;sy=e.clientY;ex=parseFloat(el.style.left)||50;ey=parseFloat(el.style.top)||50;el.setPointerCapture(e.pointerId);});
-  el.addEventListener('pointermove',function(e){if(!ac)return;var ca=g('tw').getBoundingClientRect();el.style.left=(ex+(e.clientX-sx)/ca.width*100)+'%';el.style.top=(ey+(e.clientY-sy)/ca.height*100)+'%';});
-  el.addEventListener('pointerup',function(){ac=false;});
+function paintEl(el){
+  const d=el._dom;
+  if(el.kind==='motif'){d.style.width=el.size+'%'; d.style.aspectRatio='1'; d.style.height='auto';}
+  else if(el.kind==='image'){d.style.width=el.size+'%'; d.style.height='auto';}
+  else {d.style.width='auto'; d.style.height='auto';}
+  d.innerHTML=elInner(el);
 }
-g('dl').addEventListener('pointerdown',function(e){if(!e.target.closest('.si'))selEl(null);});
-var pi=false,pd=0,ps=1,pr=0,pt0x,pt0y,pt1x,pt1y;
-g('tw').addEventListener('touchstart',function(e){if(e.touches.length===2&&sel){pi=true;pt0x=e.touches[0].clientX;pt0y=e.touches[0].clientY;pt1x=e.touches[1].clientX;pt1y=e.touches[1].clientY;pd=Math.hypot(pt1x-pt0x,pt1y-pt0y);ps=parseFloat(sel.dataset.scale)||1;pr=parseFloat(sel.dataset.rot)||0;}},{passive:true});
-g('tw').addEventListener('touchmove',function(e){if(pi&&sel&&e.touches.length===2){e.preventDefault();var c0x=e.touches[0].clientX,c0y=e.touches[0].clientY,c1x=e.touches[1].clientX,c1y=e.touches[1].clientY;var cd=Math.hypot(c1x-c0x,c1y-c0y);var s=Math.max(0.3,Math.min(4,ps*(cd/pd)));var sa=Math.atan2(pt1y-pt0y,pt1x-pt0x);var ca2=Math.atan2(c1y-c0y,c1x-c0x);var rot=pr+(ca2-sa)*(180/Math.PI);sel.dataset.scale=s;sel.dataset.rot=rot;sel.style.transform='translate(-50%,-50%) scale('+s+') rotate('+rot+'deg)';}},{passive:false});
-g('tw').addEventListener('touchend',function(){pi=false;},{passive:true});
+function applyT(el){const d=el._dom; d.style.left=el.x+'%'; d.style.top=el.y+'%'; d.style.transform=`translate(-50%,-50%) rotate(${el.rot}deg) scale(${el.scale})`; d.style.zIndex=el.z;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function addEl(el){
+  el.id=uid++; el.x=50; el.y=46; el.rot=0; el.scale=1; el.z=(curArr().reduce((m,e)=>Math.max(m,e.z||0),0))+1;
+  curArr().push(el); layerEl().appendChild(buildEl(el)); selectEl(el.id); updEmpty();
+}
+function getEl(id){return curArr().find(e=>e.id===id);}
+function dragEl(el){
+  const d=el._dom;
+  d.addEventListener('pointerdown',ev=>{
+    ev.preventDefault(); ev.stopPropagation(); selectEl(el.id);
+    el.z=(curArr().reduce((m,e)=>Math.max(m,e.z),0))+1; applyT(el);
+    const pa=document.getElementById('printArea').getBoundingClientRect();
+    const sx=ev.clientX, sy=ev.clientY, ox=el.x, oy=el.y;
+    d.setPointerCapture(ev.pointerId);
+    const mv=e=>{el.x=clamp(ox+(e.clientX-sx)/pa.width*100,-15,115); el.y=clamp(oy+(e.clientY-sy)/pa.height*100,-15,115); d.style.left=el.x+'%'; d.style.top=el.y+'%';};
+    const up=()=>{d.removeEventListener('pointermove',mv); d.removeEventListener('pointerup',up);};
+    d.addEventListener('pointermove',mv); d.addEventListener('pointerup',up);
+  });
+}
+function updEmpty(){document.getElementById('emptyHint').style.display=curArr().length?'none':'flex';}
+
+/* selection + floating tools */
+const eltools=document.getElementById('eltools'), slideBox=document.getElementById('slideBox'), slideInput=document.getElementById('slideInput');
+let slideMode=null;
+function selectEl(id){
+  state.selId=id;
+  document.querySelectorAll('.el').forEach(n=>n.classList.toggle('sel',+n.dataset.id===id));
+  if(id){eltools.classList.add('on'); slideMode=null; slideBox.classList.remove('on'); document.getElementById('tSize').classList.remove('act'); document.getElementById('tRot').classList.remove('act');}
+  else eltools.classList.remove('on');
+}
+function deselectEl(){selectEl(null);}
+document.getElementById('tSize').onclick=()=>toggleSlide('size');
+document.getElementById('tRot').onclick=()=>toggleSlide('rot');
+document.getElementById('tDel').onclick=()=>{const el=getEl(state.selId); if(el){el._dom.remove(); curArr().splice(curArr().indexOf(el),1);} deselectEl(); updEmpty();};
+function toggleSlide(m){
+  const el=getEl(state.selId); if(!el) return;
+  if(slideMode===m){slideMode=null; slideBox.classList.remove('on'); document.getElementById('tSize').classList.remove('act'); document.getElementById('tRot').classList.remove('act'); return;}
+  slideMode=m; slideBox.classList.add('on');
+  document.getElementById('tSize').classList.toggle('act',m==='size'); document.getElementById('tRot').classList.toggle('act',m==='rot');
+  if(m==='size'){slideInput.min=0.4; slideInput.max=2.8; slideInput.step=0.02; slideInput.value=el.scale;}
+  else {slideInput.min=-180; slideInput.max=180; slideInput.step=1; slideInput.value=el.rot;}
+}
+slideInput.oninput=()=>{const el=getEl(state.selId); if(!el) return; if(slideMode==='size') el.scale=+slideInput.value; else el.rot=+slideInput.value; applyT(el);};
+
+/* ================= build controls ================= */
+function buildStrips(){
+  document.querySelectorAll('.colstrip').forEach(strip=>{
+    strip.innerHTML=BASECOLORS.map(c=>`<div class="sw ${c[0]===state.base?'on':''}" data-c="${c[0]}" style="background:${c[0]}" title="${c[1]}"></div>`).join('');
+    strip.querySelectorAll('.sw').forEach(s=>s.onclick=()=>{state.base=s.dataset.c; paintTees(); buildStrips();});
+  });
+}
+document.getElementById('sizePills').innerHTML=SIZES.map(s=>`<button data-s="${s}" class="${s===state.size?'on':''}">${s}</button>`).join('');
+document.getElementById('sizePills').onclick=e=>{const b=e.target.closest('button'); if(!b) return; state.size=b.dataset.s; document.querySelectorAll('#sizePills button').forEach(x=>x.classList.toggle('on',x===b));};
+
+function buildDots(){
+  document.getElementById('dots').innerHTML=PRINTCOLORS.map(c=>{
+    if(c==='none') return `<div class="dot none ${state.printColor==='none'?'on':''}" data-c="none"></div>`;
+    return `<div class="dot ${state.printColor===c?'on':''}" data-c="${c}" style="background:${c}"></div>`;
+  }).join('');
+  document.querySelectorAll('#dots .dot').forEach(d=>d.onclick=()=>{
+    state.printColor=d.dataset.c;
+    document.querySelectorAll('#dots .dot').forEach(x=>x.classList.remove('on')); d.classList.add('on');
+    const el=getEl(state.selId); if(el && state.printColor!=='none'){el.color=state.printColor; paintEl(el);}
+  });
+}
+document.getElementById('stamprow').innerHTML=
+  MOTIF_ORDER.map(m=>`<div class="stampbtn" data-m="${m}"><svg viewBox="0 0 100 100">${MOTIFS[m]}</svg></div>`).join('')
+  +`<label class="stampbtn up" for="file"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M21 16l-5-5-7 7"/></svg>画像</label><input type="file" id="file" accept="image/*" style="display:none">`;
+document.getElementById('stamprow').addEventListener('click',e=>{const b=e.target.closest('.stampbtn[data-m]'); if(!b) return; addEl({kind:'motif', motif:b.dataset.m, size:34, color:state.printColor==='none'?'#ECE7DB':state.printColor});});
+document.getElementById('file').onchange=e=>{const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>addEl({kind:'image', src:r.result, size:52}); r.readAsDataURL(f);};
+
+document.getElementById('fontrow').innerHTML=FONTS.map(f=>`<div class="fontbtn ${f[0]===state.font?'on':''}" data-f="${f[0]}"><span class="aa" style="font-family:${f[2]}">Aa</span><span class="lb">${f[1]}</span></div>`).join('');
+document.getElementById('fontrow').addEventListener('click',e=>{const b=e.target.closest('.fontbtn'); if(!b) return; state.font=b.dataset.f; document.querySelectorAll('#fontrow .fontbtn').forEach(x=>x.classList.toggle('on',x===b));});
+document.getElementById('addTxt').onclick=()=>{const v=document.getElementById('tin').value.trim(); if(!v) return; addEl({kind:'text', text:v, font:state.font, color:state.printColor==='none'?'#ECE7DB':state.printColor, fs:30}); document.getElementById('tin').value='';};
+
+/* tabs + front/back */
+document.getElementById('tabs').addEventListener('click',e=>{const b=e.target.closest('button'); if(!b) return; state.tab=b.dataset.tab; document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===b)); document.getElementById('tabStamp').style.display=state.tab==='stamp'?'block':'none'; document.getElementById('tabText').style.display=state.tab==='text'?'block':'none';});
+document.getElementById('fb').addEventListener('click',e=>{const b=e.target.closest('button'); if(!b) return; state.side=b.dataset.side; document.querySelectorAll('#fb button').forEach(x=>x.classList.toggle('on',x===b)); document.getElementById('layerFront').style.display=state.side==='front'?'block':'none'; document.getElementById('layerBack').style.display=state.side==='back'?'block':'none'; paintTees(); deselectEl(); updEmpty();});
+document.querySelector('#scDesign .teearea').addEventListener('pointerdown',e=>{if(!e.target.closest('.el') && !e.target.closest('.eltools')) deselectEl();});
+
+/* ================= navigation ================= */
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.id===id)); state.screen=id; if(id==='scConfirm') fillConfirm();}
+document.getElementById('startBtn').onclick=()=>show('scBody');
+document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.go)));
+
+/* ================= confirm ================= */
+function miniShirt(side, mainW){
+  const els=state[side].slice().sort((a,b)=>a.z-b.z).map(el=>{
+    const st=`position:absolute;left:${el.x}%;top:${el.y}%;transform:translate(-50%,-50%) rotate(${el.rot}deg) scale(${el.scale});transform-origin:center;`;
+    if(el.kind==='motif') return `<div style="${st}width:${el.size}%;aspect-ratio:1;color:${el.color}"><svg viewBox="0 0 100 100" style="width:100%;height:100%;fill:currentColor">${MOTIFS[el.motif]}</svg></div>`;
+    if(el.kind==='text') return `<div style="${st}">${elInner(el)}</div>`;
+    if(el.kind==='image') return `<div style="${st}width:${el.size}%"><img src="${el.src}" style="width:100%;display:block"></div>`;
+    return '';
+  }).join('');
+  return `${teeSVG(state.base, side)}<div class="mini-ovl" style="position:absolute;left:31%;top:28%;width:${mainW}px;height:${mainW*1.19}px;transform-origin:top left">${els}</div>`;
+}
+function drawQR(cv,seed){const ctx=cv.getContext('2d'),N=23,pad=8,sz=(cv.width-pad*2)/N; ctx.clearRect(0,0,cv.width,cv.height); ctx.fillStyle='#171233'; let s=0; for(const c of seed)s=(s*131+c.charCodeAt(0))>>>0; const rnd=()=>{s=(s*1103515245+12345)>>>0; return (s>>>16)/65535;}; for(let y=0;y<N;y++)for(let x=0;x<N;x++)if(rnd()>0.5)ctx.fillRect(pad+x*sz,pad+y*sz,sz*0.9,sz*0.9); const fnd=(gx,gy)=>{ctx.fillStyle='#171233';ctx.fillRect(pad+gx*sz,pad+gy*sz,sz*7,sz*7);ctx.fillStyle='#ECE7DB';ctx.fillRect(pad+(gx+1)*sz,pad+(gy+1)*sz,sz*5,sz*5);ctx.fillStyle='#171233';ctx.fillRect(pad+(gx+2)*sz,pad+(gy+2)*sz,sz*3,sz*3);}; fnd(0,0);fnd(N-7,0);fnd(0,N-7);}
+function fillConfirm(){
+  deselectEl();
+  const mainW=document.getElementById('printArea').getBoundingClientRect().width||120;
+  document.getElementById('miniFront').innerHTML=miniShirt('front',mainW);
+  document.getElementById('miniBack').innerHTML=miniShirt('back',mainW);
+  ['miniFront','miniBack'].forEach(idn=>{const box=document.getElementById(idn); const w=box.getBoundingClientRect().width; const ov=box.querySelector('.mini-ovl'); if(ov&&w)ov.style.transform='scale('+((w*0.38)/mainW)+')';});
+  const code='ZM-'+Math.random().toString(36).slice(2,7).toUpperCase();
+  drawQR(document.getElementById('qr'),code);
+  const cn=(BASECOLORS.find(c=>c[0]===state.base)||['','—'])[1];
+  document.getElementById('summary').innerHTML=`<div>アイテム：<b>Tシャツ</b></div><div>カラー：<b>${cn}</b>／サイズ：<b>${state.size}</b></div><div>パーツ：<b>${state.front.length+state.back.length}</b>（前${state.front.length}／後${state.back.length}）</div><div>コード：<b>${code}</b></div>`;
+}
+document.getElementById('makeBtn').onclick=function(){this.textContent='つくっています…'; setTimeout(()=>{this.textContent='できました！受け取りへ →';},1400);};
+
+/* ================= init ================= */
+buildStrips(); buildDots(); paintTees(); updEmpty();
 </script>
+</body>
+</html>
